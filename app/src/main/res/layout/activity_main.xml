@@ -44,7 +44,7 @@
     </FrameLayout>
 
 
-<!--
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
@@ -63,6 +63,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1" />
-    -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
