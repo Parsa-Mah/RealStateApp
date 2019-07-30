@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RealStateApp</string>
+    <string name="not_exist_location">Location List is Empty</string>
 </resources>
