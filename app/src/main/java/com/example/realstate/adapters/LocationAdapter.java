@@ -3,6 +3,8 @@ package com.example.realstate.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +41,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         }
     }
 
+
     @NonNull
     @Override
     public LocationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -61,22 +64,28 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
             recyclerView.setVisibility(View.VISIBLE);
             emptyTextView.setVisibility(View.GONE);
             holder.bind(locationList.get(position));
-            if (selectedPosition == position) {
-                holder.itemView.setBackgroundColor(context.getColor(R.color.colorAccent));
-            } else {
-                holder.itemView.setBackgroundColor(context.getColor(R.color.primary_text));
-            }
+            holder.itemView.setEnabled(true);
+            holder.itemView.setClickable(true);
+            holder.itemView.setBackgroundColor(context.getColor(R.color.primary_text));
             holder.itemView.setOnClickListener(v -> {
                 holder.itemView.setEnabled(false);
                 holder.itemView.setClickable(false);
                 selectedPosition = position;
+                if (selectedPosition == position) {
+                    holder.itemView.setBackgroundColor(context.getColor(R.color.colorAccent));
+
+                } else {
+                    holder.itemView.setBackgroundColor(context.getColor(R.color.primary_text));
+                }
                 Intent intent = new Intent(context , ShowPropertyActivity.class);
                 intent.putExtra("loc", locationList.get(position));
                 context.startActivity(intent);
-                selectedPosition = -1;
-                holder.itemView.setEnabled(true);
-                holder.itemView.setClickable(true);
-                notifyDataSetChanged();
+                final Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    selectedPosition = -1;
+                    notifyDataSetChanged();
+                }, 100);
+
             });
 
         }

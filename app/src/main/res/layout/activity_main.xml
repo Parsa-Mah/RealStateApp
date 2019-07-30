@@ -8,21 +8,13 @@
     tools:context=".MainActivity">
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="visible"
+        app:layout_constraintVertical_bias="0.01"
         app:layout_constraintEnd_toEndOf="parent">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rc_location"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="visible"
-           />
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_empty"
             style="@style/TitleStyle"
@@ -37,12 +29,22 @@
             android:textSize="18sp"
             android:visibility="gone"
             />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="visible"
+            />
 
 
     </FrameLayout>
 
 
-
+<!--
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
@@ -61,5 +63,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1" />
+    -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

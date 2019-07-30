@@ -1,14 +1,12 @@
 package com.example.realstate;
 
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.realstate.adapters.LocationAdapter;
 import com.example.realstate.models.Location;
-
 import java.util.ArrayList;
 import java.util.List;
 
