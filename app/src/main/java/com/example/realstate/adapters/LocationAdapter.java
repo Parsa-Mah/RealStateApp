@@ -121,7 +121,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         public void bind(Location location) {
             title.setText(location.getTitle());
             description.setText(location.getDescription());
-            //avatar.setImageResource(location.getAvatarPath());
+            avatar.setImageResource(Integer.parseInt(location.getAvatarPath()));
 
 
         }

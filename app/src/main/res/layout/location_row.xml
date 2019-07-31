@@ -61,6 +61,7 @@
                 app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:scaleType="centerCrop"
                 app:srcCompat="@color/colorPrimary" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
