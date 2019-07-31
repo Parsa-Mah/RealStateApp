@@ -39,4 +39,5 @@ public class RealStateAppSQLiteOpenHelper extends SQLiteOpenHelper {
         super(context, null, null, 1);
 
     }
+
 }
