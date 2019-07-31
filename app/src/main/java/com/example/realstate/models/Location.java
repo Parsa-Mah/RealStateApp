@@ -7,12 +7,7 @@ public class Location implements Parcelable {
     private int id;
     private String title , description , avatarPath;
 
-    public Location(String title, String description) {
-        this.title = title;
-        this.description = description;
-    }
-
-    public Location(String title, String description, String avatarPath) {
+    public Location(int Id, String title, String description, String avatarPath) {
         this.title = title;
         this.description = description;
         this.avatarPath = avatarPath;

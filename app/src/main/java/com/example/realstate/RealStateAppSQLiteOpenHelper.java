@@ -2,6 +2,7 @@ package com.example.realstate;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -23,6 +24,12 @@ public class RealStateAppSQLiteOpenHelper extends SQLiteOpenHelper {
         contentValues.put("description", description);
         db.insert("RealStateDBTable", null, contentValues);
     }
+
+    public ContentValues readFromDB(SQLiteDatabase db, Cursor cursor){
+        ContentValues contentValues = new ContentValues();
+        return contentValues;
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
