@@ -3,14 +3,19 @@ package com.example.realstate.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Location implements Parcelable {
+public class House implements Parcelable {
     private int id;
-    private String title , description , avatarPath;
+    private String title , description , avatarPath , coordination;
 
-    public Location(int Id, String title, String description, String avatarPath) {
+    public House(int Id, String title, String description, String avatarPath) {
         this.title = title;
         this.description = description;
         this.avatarPath = avatarPath;
+    }
+
+    public House(int id, String title, String description, String avatarPath, String coordination) {
+        this(id , title , description , avatarPath);
+        this.coordination = coordination;
     }
 
     public String getTitle() {
@@ -37,6 +42,22 @@ public class Location implements Parcelable {
         this.avatarPath = avatarPath;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCoordination() {
+        return coordination;
+    }
+
+    public void setCoordination(String coordination) {
+        this.coordination = coordination;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -48,23 +69,25 @@ public class Location implements Parcelable {
         dest.writeString(title);
         dest.writeString(description);
         dest.writeString(avatarPath);
+        dest.writeString(coordination);
 
 
     }
-    public static final Parcelable.Creator<Location> CREATOR = new Parcelable.Creator<Location>() {
-        public Location createFromParcel(Parcel in) {
-            return new Location(in);
+    public static final Parcelable.Creator<House> CREATOR = new Parcelable.Creator<House>() {
+        public House createFromParcel(Parcel in) {
+            return new House(in);
         }
 
-        public Location[] newArray(int size) {
-            return new Location[size];
+        public House[] newArray(int size) {
+            return new House[size];
 
         }
     };
-    private Location(Parcel in) {
+    private House(Parcel in) {
         id = in.readInt();
         title = in.readString();
         description = in.readString();
         avatarPath = in.readString();
+        coordination = in.readString();
     }
 }

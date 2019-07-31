@@ -3,7 +3,6 @@ package com.example.realstate.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +14,13 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.realstate.R;
 import com.example.realstate.ShowPropertyActivity;
-import com.example.realstate.models.Location;
+import com.example.realstate.models.House;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationViewHolder> {
-    private List<Location> locationList;
+public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHolder> {
+    private List<House> houseList;
     private Context context;
     private RecyclerView recyclerView;
     private AppCompatTextView emptyTextView;
@@ -33,29 +32,29 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         VIEW_TYPE_OCCUPIED = 2;
     }
 
-    public LocationAdapter(@NonNull List<Location> locationList) {
-        if (locationList == null) {
-            this.locationList = new ArrayList<>();
+    public HouseAdapter(@NonNull List<House> houseList) {
+        if (houseList == null) {
+            this.houseList = new ArrayList<>();
         } else {
-            this.locationList = locationList;
+            this.houseList = houseList;
         }
     }
 
 
     @NonNull
     @Override
-    public LocationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HouseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemview = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.location_row, parent, false);
         context = parent.getContext();
         Activity activity = (Activity) context;
         recyclerView = activity.findViewById(R.id.rc_location);
         emptyTextView = activity.findViewById(R.id.tv_empty);
-        return new LocationViewHolder(itemview);
+        return new HouseViewHolder(itemview);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LocationViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull HouseViewHolder holder, int position) {
         int viewType = getItemViewType(position);
         if (viewType == VIEW_TYPE_EMPTY) {
             recyclerView.setVisibility(View.INVISIBLE);
@@ -63,7 +62,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         } else if (viewType == VIEW_TYPE_OCCUPIED) {
             recyclerView.setVisibility(View.VISIBLE);
             emptyTextView.setVisibility(View.GONE);
-            holder.bind(locationList.get(position));
+            holder.bind(houseList.get(position));
             holder.itemView.setEnabled(true);
             holder.itemView.setClickable(true);
             holder.itemView.setBackgroundColor(context.getColor(R.color.primary_text));
@@ -78,7 +77,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
                     holder.itemView.setBackgroundColor(context.getColor(R.color.primary_text));
                 }
                 Intent intent = new Intent(context , ShowPropertyActivity.class);
-                intent.putExtra("loc", locationList.get(position));
+                intent.putExtra("loc", houseList.get(position));
                 context.startActivity(intent);
                 final Handler handler = new Handler();
                 handler.postDelayed(() -> {
@@ -95,33 +94,33 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
     @Override
     public int getItemCount() {
-        return locationList.size();
+        return houseList.size();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (locationList.size() == 0) {
+        if (houseList.size() == 0) {
             return VIEW_TYPE_EMPTY;
         } else {
             return VIEW_TYPE_OCCUPIED;
         }
     }
 
-    public class LocationViewHolder extends RecyclerView.ViewHolder {
+    public class HouseViewHolder extends RecyclerView.ViewHolder {
         private AppCompatTextView title, description;
         private AppCompatImageView avatar;
 
-        LocationViewHolder(View itemView) {
+        HouseViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.tv_title);
             description = itemView.findViewById(R.id.tv_description);
             avatar = itemView.findViewById(R.id.imgv_avatar);
         }
 
-        public void bind(Location location) {
-            title.setText(location.getTitle());
-            description.setText(location.getDescription());
-            avatar.setImageResource(Integer.parseInt(location.getAvatarPath()));
+        public void bind(House house) {
+            title.setText(house.getTitle());
+            description.setText(house.getDescription());
+            avatar.setImageResource(Integer.parseInt(house.getAvatarPath()));
 
 
         }
