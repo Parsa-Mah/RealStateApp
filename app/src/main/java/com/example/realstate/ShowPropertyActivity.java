@@ -39,7 +39,6 @@ public class ShowPropertyActivity extends AppCompatActivity {
             textViewTitle.setText(title);
             String description = cursor.getString(cursor.getColumnIndex("description"));
             textViewDescription.setText(description);
-            Toast.makeText(this, "Description:"+ cursor.getString(cursor.getColumnIndex("description")), Toast.LENGTH_LONG).show();
             imageViewShowProperty.setImageResource(cursor.getInt(cursor.getColumnIndex("Image_resource_id")));
         }
     }
