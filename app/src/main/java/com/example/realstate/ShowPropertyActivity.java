@@ -15,8 +15,10 @@ public class ShowPropertyActivity extends AppCompatActivity {
     AppCompatImageView imageViewShowProperty;
     AppCompatTextView textViewTitle , textViewDescription;
     House house;
+    /*
     SQLiteDatabase db;
     Cursor cursor;
+    */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +48,9 @@ public class ShowPropertyActivity extends AppCompatActivity {
 
     private void init() {
 
-        textViewDescription = (AppCompatTextView)findViewById(R.id.textViewDescription);
-        textViewTitle = (AppCompatTextView)findViewById(R.id.textViewTitle);
-        imageViewShowProperty = (AppCompatImageView) findViewById(R.id.imageViewShowProperty);
+        textViewDescription = findViewById(R.id.textViewDescription);
+        textViewTitle = findViewById(R.id.textViewTitle);
+        imageViewShowProperty = findViewById(R.id.imageViewShowProperty);
         house = getIntent().getParcelableExtra("loc");
     }
 
