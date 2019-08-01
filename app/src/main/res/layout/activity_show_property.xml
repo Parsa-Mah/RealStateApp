@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primary_text"
     tools:context=".ShowPropertyActivity">
+
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageViewShowProperty"
@@ -28,25 +30,12 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:gravity="center"
-        android:text="TextView"
+        tools:text="TextView"
         android:textColor="@color/colorAccent"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewShowProperty" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/asdsads"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
-
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="0dp"
@@ -65,8 +54,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start|center_horizontal"
-            android:text="TextView"
+            tools:text="TextView"
             android:textSize="18sp" />
     </ScrollView>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/asdsads"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

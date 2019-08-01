@@ -77,7 +77,6 @@ public class House implements Parcelable {
         public House createFromParcel(Parcel in) {
             return new House(in);
         }
-
         public House[] newArray(int size) {
             return new House[size];
 

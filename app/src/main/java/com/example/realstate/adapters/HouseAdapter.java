@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.realstate.R;
 import com.example.realstate.ShowPropertyActivity;
 import com.example.realstate.models.House;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +22,6 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
     private Context context;
     private RecyclerView recyclerView;
     private AppCompatTextView emptyTextView;
-    private int selectedPosition = -1;
     private static final int VIEW_TYPE_EMPTY, VIEW_TYPE_OCCUPIED , DELAY;
 
     static {
@@ -56,7 +53,7 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
 
     @Override
     public void onBindViewHolder(@NonNull HouseViewHolder holder, int position) {
-        int viewType = getItemViewType(position);
+        int viewType = getItemViewType(position);//get View type if 1 --> showEmptyView() if 2 -->  showRecyclerView()
         if (viewType == VIEW_TYPE_EMPTY) {
             showEmptyView();
         } else if (viewType == VIEW_TYPE_OCCUPIED) {
@@ -73,29 +70,21 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
         holder.itemView.setOnClickListener(v -> {
             holder.itemView.setEnabled(false);
             holder.itemView.setClickable(false);
-            selectedPosition = position;
-            if (selectedPosition == position) {
-                holder.itemView.setBackgroundColor(context.getColor(R.color.colorAccent));
-
-            } else {
-                holder.itemView.setBackgroundColor(context.getColor(R.color.primary_text));
-            }
+            holder.itemView.setBackgroundColor(context.getColor(R.color.colorAccent));
             Intent intent = new Intent(context , ShowPropertyActivity.class);
-            intent.putExtra("loc", houseList.get(position));
+            intent.putExtra("loc", houseList.get(position));// send house object to next activity
             context.startActivity(intent);
-            final Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                selectedPosition = -1;
-                notifyDataSetChanged();
-            }, DELAY);
+            final Handler handler = new Handler(); //delay for user cant abuse  click
+            handler.postDelayed(this::notifyDataSetChanged, DELAY);
 
         });
     }
 
-    private void resetItemViewProperty(@NonNull HouseViewHolder holder) {
+    private void resetItemViewProperty(@NonNull HouseViewHolder holder ) {
         holder.itemView.setEnabled(true);
         holder.itemView.setClickable(true);
         holder.itemView.setBackgroundColor(context.getColor(R.color.primary_text));
+
     }
 
     private void showRecyclerView() {
