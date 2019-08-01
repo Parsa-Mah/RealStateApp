@@ -81,7 +81,7 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
                 holder.itemView.setBackgroundColor(context.getColor(R.color.primary_text));
             }
             Intent intent = new Intent(context , ShowPropertyActivity.class);
-            intent.putExtra("loc", houseList.get(position));
+            intent.putExtra("loc", position);
             context.startActivity(intent);
             final Handler handler = new Handler();
             handler.postDelayed(() -> {
