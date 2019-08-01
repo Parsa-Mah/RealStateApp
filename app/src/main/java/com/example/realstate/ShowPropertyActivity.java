@@ -42,4 +42,11 @@ public class ShowPropertyActivity extends AppCompatActivity {
             imageViewShowProperty.setImageResource(cursor.getInt(cursor.getColumnIndex("Image_resource_id")));
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        db.close();
+        cursor.close();
+    }
 }
