@@ -1,34 +1,34 @@
 package com.example.realstate;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+
+
+import com.example.realstate.models.House;
 
 public class ShowPropertyActivity extends AppCompatActivity {
-    ImageView imageViewShowProperty;
-    TextView textViewTitle;
-    TextView textViewDescription;
+    AppCompatImageView imageViewShowProperty;
+    AppCompatTextView textViewTitle , textViewDescription;
+    House house;
     SQLiteDatabase db;
     Cursor cursor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_property);
-
-        Intent intent = getIntent();
-        int houseId = intent.getIntExtra("loc", -2) + 1;
+        init();
+        imageViewShowProperty.setImageResource(Integer.parseInt(house.getAvatarPath()));
+        textViewTitle.setText(house.getTitle());
+        textViewDescription.setText(house.getDescription());
+        /*
+        int houseId = getIntent().getIntExtra("loc");
         Toast.makeText(this, "The id is"+ houseId, Toast.LENGTH_LONG).show();
 
-        textViewDescription = (TextView)findViewById(R.id.textViewDescription);
-        textViewTitle = findViewById(R.id.textViewTitle);
-        imageViewShowProperty = findViewById(R.id.imageViewShowProperty);
         RealStateAppSQLiteOpenHelper openHelper = new RealStateAppSQLiteOpenHelper(this);
         db = openHelper.getReadableDatabase();
         String[] dbArray = { "title", "description", "Image_resource_id"};
@@ -41,12 +41,23 @@ public class ShowPropertyActivity extends AppCompatActivity {
             textViewDescription.setText(description);
             imageViewShowProperty.setImageResource(cursor.getInt(cursor.getColumnIndex("Image_resource_id")));
         }
+        */
+    }
+
+    private void init() {
+
+        textViewDescription = (AppCompatTextView)findViewById(R.id.textViewDescription);
+        textViewTitle = (AppCompatTextView)findViewById(R.id.textViewTitle);
+        imageViewShowProperty = (AppCompatImageView) findViewById(R.id.imageViewShowProperty);
+        house = getIntent().getParcelableExtra("loc");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        /*
         db.close();
         cursor.close();
+        */
     }
 }
