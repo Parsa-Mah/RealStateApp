@@ -107,6 +107,8 @@ public class ShowPropertyActivity extends AppCompatActivity implements OnMapRead
         mMapView.onLowMemory();
     }
 
+
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         /**
