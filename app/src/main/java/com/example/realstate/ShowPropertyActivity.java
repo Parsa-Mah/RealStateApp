@@ -114,4 +114,5 @@ public class ShowPropertyActivity extends AppCompatActivity implements OnMapRead
         mMapView.getParent().requestDisallowInterceptTouchEvent(true);
         return super.dispatchTouchEvent(ev);
     }
+
 }
