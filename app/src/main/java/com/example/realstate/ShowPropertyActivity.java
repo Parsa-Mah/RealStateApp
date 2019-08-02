@@ -67,10 +67,8 @@ public class ShowPropertyActivity extends AppCompatActivity implements OnMapRead
 
     @Override
     public void onMapReady(GoogleMap map) {
-        map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-        LatLng latLng = new LatLng(12.0, 30.0);
-        double n = latLng.latitude;
-        double m = latLng.longitude;
+        LatLng latLng = new LatLng(house.getLatitude(), house.getLongitude());
+        map.addMarker(new MarkerOptions().position(latLng).title("Marker"));
     }
 
     @Override
