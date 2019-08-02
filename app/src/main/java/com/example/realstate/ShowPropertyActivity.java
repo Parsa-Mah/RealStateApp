@@ -114,7 +114,7 @@ public class ShowPropertyActivity extends AppCompatActivity implements OnMapRead
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        /**
+        /*
          * Request all parents to relinquish the touch events
          */
         mMapView.getParent().requestDisallowInterceptTouchEvent(true);

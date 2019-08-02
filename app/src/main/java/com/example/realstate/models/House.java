@@ -9,25 +9,12 @@ public class House implements Parcelable {
     private int id;
     private String title , description , avatarPath ;
     private double latitude;
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
     private double longitude;
     private LatLng  coordination;
+
+
+
+
 
     public House(int id, String title, String description, String avatarPath) {
         this.title = title;
@@ -42,6 +29,7 @@ public class House implements Parcelable {
         this.avatarPath = avatarPath;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.coordination = new LatLng(latitude , longitude);
     }
 
     public House(int id, String title, String description, String avatarPath, LatLng coordination) {
@@ -90,6 +78,21 @@ public class House implements Parcelable {
 
     public void setCoordination(LatLng coordination) {
         this.coordination = coordination;
+    }
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
 
