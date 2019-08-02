@@ -52,13 +52,16 @@
                     tools:text="TextView" />
             </androidx.core.widget.NestedScrollView>
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/asdsads"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="50dp"
+                android:layout_weight="1" />
+
         </LinearLayout>
     </ScrollView>
 
