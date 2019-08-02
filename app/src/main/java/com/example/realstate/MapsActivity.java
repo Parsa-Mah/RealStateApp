@@ -1,4 +1,4 @@
-package com.example.realstate.models;
+package com.example.realstate;
 
 import androidx.fragment.app.FragmentActivity;
 
