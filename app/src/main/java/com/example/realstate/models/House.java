@@ -3,19 +3,26 @@ package com.example.realstate.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class House implements Parcelable {
     private int id;
-    private String title , description , avatarPath , coordination;
+    private String title , description , avatarPath ;
+    private double latitude ,longitude;
+    private LatLng  coordination;
 
-    public House(int Id, String title, String description, String avatarPath) {
+    public House(int id, String title, String description, String avatarPath) {
         this.title = title;
         this.description = description;
         this.avatarPath = avatarPath;
     }
 
-    public House(int id, String title, String description, String avatarPath, String coordination) {
+    public House(int id, String title, String description, String avatarPath, LatLng coordination) {
         this(id , title , description , avatarPath);
         this.coordination = coordination;
+        this.latitude = coordination.latitude;
+        this.longitude = coordination.longitude;
+
     }
 
     public String getTitle() {
@@ -50,11 +57,11 @@ public class House implements Parcelable {
         this.id = id;
     }
 
-    public String getCoordination() {
+    public LatLng getCoordination() {
         return coordination;
     }
 
-    public void setCoordination(String coordination) {
+    public void setCoordination(LatLng coordination) {
         this.coordination = coordination;
     }
 
@@ -69,7 +76,9 @@ public class House implements Parcelable {
         dest.writeString(title);
         dest.writeString(description);
         dest.writeString(avatarPath);
-        dest.writeString(coordination);
+        dest.writeParcelable(coordination ,i);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
 
 
     }
@@ -87,6 +96,8 @@ public class House implements Parcelable {
         title = in.readString();
         description = in.readString();
         avatarPath = in.readString();
-        coordination = in.readString();
+        coordination = in.readParcelable(getClass().getClassLoader());
+        latitude = in.readDouble();
+        longitude = in.readDouble();
     }
 }
