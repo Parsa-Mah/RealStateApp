@@ -35,6 +35,15 @@ public class House implements Parcelable {
         this.avatarPath = avatarPath;
     }
 
+    public House(int id, String title, String description, String avatarPath, double latitude, double longitude) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.avatarPath = avatarPath;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public House(int id, String title, String description, String avatarPath, LatLng coordination) {
         this(id , title , description , avatarPath);
         this.coordination = coordination;
@@ -82,6 +91,7 @@ public class House implements Parcelable {
     public void setCoordination(LatLng coordination) {
         this.coordination = coordination;
     }
+
 
     @Override
     public int describeContents() {
