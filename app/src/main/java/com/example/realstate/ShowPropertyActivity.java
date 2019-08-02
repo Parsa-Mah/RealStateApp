@@ -8,6 +8,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.example.realstate.models.House;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -69,6 +71,7 @@ public class ShowPropertyActivity extends AppCompatActivity implements OnMapRead
     public void onMapReady(GoogleMap map) {
         LatLng latLng = new LatLng(house.getLatitude(), house.getLongitude());
         map.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,16f));
     }
 
     @Override
