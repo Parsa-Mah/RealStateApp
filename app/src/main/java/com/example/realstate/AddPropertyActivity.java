@@ -38,7 +38,7 @@ public class AddPropertyActivity extends AppCompatActivity {
     }
 
     private boolean isValid(String title , String description) {
-        if(title != null && description != null)
+        if(title != "" && description != "")
             return true;
         return false;
     }
