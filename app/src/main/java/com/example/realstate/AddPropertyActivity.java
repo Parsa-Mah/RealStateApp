@@ -16,15 +16,11 @@ public class AddPropertyActivity extends AppCompatActivity {
     Button button;
     int mode = 1;
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        onSaveInstanceState();
         setContentView(R.layout.activity_add_property);
         init();
 
@@ -41,7 +37,6 @@ public class AddPropertyActivity extends AppCompatActivity {
                         house.setTitle("title");
                         house.setDescription("description");
                         intent.putExtra("location", house);
-                        intent.putExtra()
                         startActivity(intent);
                     }
                     break;
