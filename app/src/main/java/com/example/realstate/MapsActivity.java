@@ -46,5 +46,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(isfahan).title("Marker in Isfahan"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(isfahan, 15f));
         Snackbar.make(findViewById(R.id.map),"Hi Arya", Snackbar.LENGTH_LONG).show();
+        Snackbar.make(findViewById(R.id.map),"Hi Arya", Snackbar.LENGTH_LONG).show();
     }
 }
