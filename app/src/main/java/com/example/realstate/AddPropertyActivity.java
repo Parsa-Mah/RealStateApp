@@ -18,11 +18,13 @@ public class AddPropertyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_property);
+        button =  findViewById(R.id.buttonAddLocation);
+        button.setOnClickListener(view -> {
+            Intent intent = new Intent( AddPropertyActivity.this , MapsActivity.class);
 
+            startActivity(intent);
+        });
         }
-    public void passToMap(View view){
-        Intent startNewActivity = new Intent(this , MapsActivity.class);
-        startActivity(startNewActivity);
-    }
+
     }
 
