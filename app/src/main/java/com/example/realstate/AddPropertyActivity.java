@@ -31,14 +31,14 @@ public class AddPropertyActivity extends AppCompatActivity {
                 house.setTitle("title");
                 house.setDescription("description");
                 intent.putExtra("location" , house);
+
                 startActivity(intent);
             }
         });
     }
 
     private boolean isValid(String title , String description) {
-        return false;
-    }
+        if(title != null && description != null)}
 
     private void init() {
         button =  findViewById(R.id.buttonAddLocation);
