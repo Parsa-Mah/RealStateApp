@@ -38,7 +38,10 @@ public class AddPropertyActivity extends AppCompatActivity {
     }
 
     private boolean isValid(String title , String description) {
-        if(title != null && description != null)}
+        if(title != null && description != null)
+            return true;
+        return false;
+    }
 
     private void init() {
         button =  findViewById(R.id.buttonAddLocation);
