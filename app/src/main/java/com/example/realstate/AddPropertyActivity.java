@@ -14,6 +14,7 @@ public class AddPropertyActivity extends AppCompatActivity {
     EditText editTextTitle ;
     EditText editTextDescription ;
     Button button;
+    int mode = 1 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,20 +26,27 @@ public class AddPropertyActivity extends AppCompatActivity {
         button.setOnClickListener(view -> {
             String title = editTextTitle.getText().toString().trim();
             String description = editTextDescription.getText().toString().trim();
-            if(isValid(title,description)){
-                Intent intent = new Intent( AddPropertyActivity.this , MapsActivity.class);
-                House house = new House();
-                house.setTitle("title");
-                house.setDescription("description");
-                intent.putExtra("location" , house);
+            switch (mode){
+                case 1 : if(isValid(title,description)){
+                    Intent intent = new Intent( AddPropertyActivity.this , MapsActivity.class);
+                    House house = new House();
+                    house.setTitle("title");
+                    house.setDescription("description");
 
-                startActivity(intent);
+                    intent.putExtra("location" , house);
+
+                    startActivity(intent);
+                }
+                    break;
+                case 2 :
+                    break;
             }
+
         });
     }
 
     private boolean isValid(String title , String description) {
-        if(title != "" && description != "")
+        if(title.isEmpty() && description.isEmpty())
             return true;
         return false;
     }
