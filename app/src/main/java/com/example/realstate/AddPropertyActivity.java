@@ -10,21 +10,22 @@ import android.widget.EditText;
 
 public class AddPropertyActivity extends AppCompatActivity {
 
-    EditText editTextTitle ;
-    EditText editTextDescription ;
+    EditText editTextTitle;
+    EditText editTextDescription;
     Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_property);
-        button =  findViewById(R.id.buttonAddLocation);
+        button = findViewById(R.id.buttonAddLocation);
+
         button.setOnClickListener(view -> {
-            Intent intent = new Intent( AddPropertyActivity.this , MapsActivity.class);
+            Intent intent = new Intent(AddPropertyActivity.this, MapsActivity.class);
 
             startActivity(intent);
         });
-        }
-
     }
+
+}
 
