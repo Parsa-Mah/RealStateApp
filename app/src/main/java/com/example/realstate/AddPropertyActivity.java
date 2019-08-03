@@ -11,10 +11,10 @@ import com.example.realstate.models.House;
 
 public class AddPropertyActivity extends AppCompatActivity {
 
-    EditText editTextTitle ;
-    EditText editTextDescription ;
+    EditText editTextTitle;
+    EditText editTextDescription;
     Button button;
-    int mode = 1 ;
+    int mode = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,33 +26,34 @@ public class AddPropertyActivity extends AppCompatActivity {
         button.setOnClickListener(view -> {
             String title = editTextTitle.getText().toString().trim();
             String description = editTextDescription.getText().toString().trim();
-            switch (mode){
-                case 1 : if(isValid(title,description)){
-                    Intent intent = new Intent( AddPropertyActivity.this , MapsActivity.class);
-                    House house = new House();
-                    house.setTitle("title");
-                    house.setDescription("description");
+            switch (mode) {
+                case 1:
+                    if (isValid(title, description)) {
+                        Intent intent = new Intent(AddPropertyActivity.this, MapsActivity.class);
+                        House house = new House();
+                        house.setTitle("title");
+                        house.setDescription("description");
 
-                    intent.putExtra("location" , house);
+                        intent.putExtra("location", house);
 
-                    startActivity(intent);
-                }
+                        startActivity(intent);
+                    }
                     break;
-                case 2 :
+                case 2:
                     break;
             }
 
         });
     }
 
-    private boolean isValid(String title , String description) {
-        if(title.isEmpty() && description.isEmpty())
+    private boolean isValid(String title, String description) {
+        if (title.isEmpty() && description.isEmpty())
             return true;
         return false;
     }
 
     private void init() {
-        button =  findViewById(R.id.buttonAddLocation);
+        button = findViewById(R.id.buttonAddLocation);
         editTextTitle = findViewById(R.id.editTextTitel);
         editTextDescription = findViewById(R.id.editTextDescription);
 
