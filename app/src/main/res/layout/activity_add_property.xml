@@ -35,7 +35,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editTextPropertyName"
+        android:id="@+id/editTextDescription"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="24dp"
@@ -49,10 +49,10 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonAddLocation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPropertyTitel" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTitel" />
 
     <EditText
-        android:id="@+id/editTextPropertyTitel"
+        android:id="@+id/editTextTitel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
