@@ -29,6 +29,7 @@ public class AddPropertyActivity extends AppCompatActivity {
         init();
 
 
+
         button.setOnClickListener(view -> {
             String title = editTextTitle.getText().toString().trim();
             String description = editTextDescription.getText().toString().trim();
