@@ -33,9 +33,7 @@ public class AddPropertyActivity extends AppCompatActivity {
                         House house = new House();
                         house.setTitle("title");
                         house.setDescription("description");
-
                         intent.putExtra("location", house);
-
                         startActivity(intent);
                     }
                     break;
@@ -48,7 +46,8 @@ public class AddPropertyActivity extends AppCompatActivity {
 
     private boolean isValid(String title, String description) {
         if (title.isEmpty() && description.isEmpty())
-            return true;
+            return true;//todo:avaz kardan return ha + if is empty edittext request foucus to this edittext+show toast for error
+        //todo:check kardan mahdoodiyat 3<title <50 va 5<description<500
         return false;
     }
 
