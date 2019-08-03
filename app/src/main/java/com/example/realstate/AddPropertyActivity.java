@@ -33,9 +33,8 @@ public class AddPropertyActivity extends AppCompatActivity {
                 intent.putExtra("location" , house);
                 startActivity(intent);
             }
-
         });
-        }
+    }
 
     private boolean isValid(String title , String description) {
         return false;
