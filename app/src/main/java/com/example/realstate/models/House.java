@@ -12,9 +12,8 @@ public class House implements Parcelable {
     private double longitude;
     private LatLng  coordination;
 
-
-
-
+    public House() {
+    }
 
     public House(int id, String title, String description, String avatarPath) {
         this.title = title;
