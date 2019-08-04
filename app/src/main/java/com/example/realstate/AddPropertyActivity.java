@@ -57,6 +57,7 @@ public class AddPropertyActivity extends AppCompatActivity {
                     Bitmap bitmap = BitmapFactory.decodeFile(filePath);
                     Drawable drawable = new BitmapDrawable(AddPropertyActivity.this.getResources(), bitmap);
                     imageView.setBackground(drawable);
+
                 }
                 break;
                 default:
