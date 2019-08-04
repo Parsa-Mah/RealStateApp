@@ -86,8 +86,6 @@ public class AddPropertyActivity extends AppCompatActivity {
 
             String title = editTextTitle.getText().toString().trim();
             String description = editTextDescription.getText().toString().trim();
-            switch (mode) {
-                case 1:
                     if (isValid(title, description)) {
                         Intent intent = new Intent(AddPropertyActivity.this, MapsActivity.class);
                         House house = new House();
@@ -96,10 +94,7 @@ public class AddPropertyActivity extends AppCompatActivity {
                         intent.putExtra("location", house);
                         startActivity(intent);
                     }
-                    break;
-                case 2:
-                    break;
-            }
+
 
         });
     }
