@@ -3,23 +3,17 @@ package com.example.realstate;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,14 +21,12 @@ import android.widget.Toast;
 
 import com.example.realstate.models.House;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-
 public class AddPropertyActivity extends AppCompatActivity {
 
     EditText editTextTitle;
     EditText editTextDescription;
-    Button button;
+    Button buttonAddLocation;
+    Button buttonAddProperty;
     int mode = 1;
     ImageView imageView;
     private static final int SELECTED_IMAGE = 1;
@@ -82,7 +74,7 @@ public class AddPropertyActivity extends AppCompatActivity {
         });
 
 
-        button.setOnClickListener(view -> {
+        buttonAddLocation.setOnClickListener(view -> {
 
             String title = editTextTitle.getText().toString().trim();
             String description = editTextDescription.getText().toString().trim();
@@ -107,11 +99,11 @@ public class AddPropertyActivity extends AppCompatActivity {
     }
 
     private void init() {
-        button = findViewById(R.id.buttonAddLocation);
+        buttonAddLocation = findViewById(R.id.buttonAddLocation);
         editTextTitle = findViewById(R.id.editTextTitel);
         editTextDescription = findViewById(R.id.editTextDescription);
         imageView = findViewById(R.id.imageViewAddProperty);
-
+        buttonAddProperty = findViewById(R.id.buttonAddProperty);
     }
     public void requestPermissionForReadExtertalStorage() throws Exception {
         try {
