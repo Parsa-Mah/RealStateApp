@@ -105,9 +105,9 @@ public class AddPropertyActivity extends AppCompatActivity {
 
     private boolean isValid(String title, String description) {
         if (title.isEmpty() && description.isEmpty())
-            return true;//todo:avaz kardan return ha + if is empty edittext request foucus to this edittext+show toast for error
+            return false;//todo:avaz kardan return ha + if is empty edittext request foucus to this edittext+show toast for error
         //todo:check kardan mahdoodiyat 3<title <50 va 5<description<500
-        return false;
+        return true;
     }
 
     private void init() {
