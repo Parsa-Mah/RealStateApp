@@ -73,11 +73,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        recyclerView = findViewById(R.id.rc_location);
-        floatingActionButton = findViewById(R.id.floatingActionButton);
         RealStateAppSQLiteOpenHelper realStateAppSQLiteOpenHelper = new RealStateAppSQLiteOpenHelper(this);
         fillDB(realStateAppSQLiteOpenHelper);
-
+        recyclerView = findViewById(R.id.rc_location);
+        floatingActionButton = findViewById(R.id.floatingActionButton);
     }
 
     private void fillDB(RealStateAppSQLiteOpenHelper realStateAppSQLiteOpenHelper) {
