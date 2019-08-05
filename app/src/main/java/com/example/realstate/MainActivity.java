@@ -67,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
         houseList = new ArrayList<>();
         RealStateAppSQLiteOpenHelper realStateAppSQLiteOpenHelper = new RealStateAppSQLiteOpenHelper(this);
         db = realStateAppSQLiteOpenHelper.getReadableDatabase();
-        String[] colomns = {"_id", "title", "description", "Image_resource_id", "latitude", "longitude"};
+        String[] colomns = {"_id", "title", "description", "Image_file_path", "latitude", "longitude"};
         cursor = db.query("RealStateDBTable", colomns, null, null, null, null, null);
         while (cursor.moveToNext()) {
-            houseList.add(new House(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getBlob(3), cursor.getDouble(4), cursor.getDouble(5)));
+            houseList.add(new House(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getDouble(4), cursor.getDouble(5)));
         }
     }
 
