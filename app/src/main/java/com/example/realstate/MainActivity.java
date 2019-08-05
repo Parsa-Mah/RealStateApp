@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -80,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fillDB(RealStateAppSQLiteOpenHelper realStateAppSQLiteOpenHelper) {
+        db = realStateAppSQLiteOpenHelper.getWritableDatabase();
         Drawable drawable = getDrawable(R.drawable.home1);
         Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
