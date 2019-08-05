@@ -130,7 +130,7 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
             title.setText(house.getTitle());
             description.setText(house.getDescription());
            // avatar.setImageResource(Integer.parseInt(house.getAvatarPath()));
-            Bitmap bm = BitmapFactory.decodeByteArray(house.getAvatar(), 0, house.getAvatar().length);
+            Bitmap bm = BitmapFactory.decodeFile(house.getAvatar());
             avatar.setImageBitmap(bm);
 
         }

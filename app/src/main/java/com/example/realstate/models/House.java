@@ -8,7 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class House implements Parcelable {
     private int id;
     private String title , description ;
-    private byte[] avatar;
+    private String avatar;
     private double latitude;
     private double longitude;
     private LatLng  coordination;
@@ -17,7 +17,7 @@ public class House implements Parcelable {
     }
 
 
-    public House(int id, String title, String description, byte[] avatar, double latitude, double longitude) {
+    public House(int id, String title, String description, String avatar, double latitude, double longitude) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -43,11 +43,11 @@ public class House implements Parcelable {
         this.description = description;
     }
 
-    public byte[] getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(byte[] avatar) {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 
