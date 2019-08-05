@@ -7,7 +7,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class House implements Parcelable {
     private int id;
-    private String title , description , avatarPath ;
+    private String title , description ;
+    private byte[] avatar;
     private double latitude;
     private double longitude;
     private LatLng  coordination;
@@ -15,28 +16,15 @@ public class House implements Parcelable {
     public House() {
     }
 
-    public House(int id, String title, String description, String avatarPath) {
-        this.title = title;
-        this.description = description;
-        this.avatarPath = avatarPath;
-    }
 
-    public House(int id, String title, String description, String avatarPath, double latitude, double longitude) {
+    public House(int id, String title, String description, byte[] avatar, double latitude, double longitude) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.avatarPath = avatarPath;
+        this.avatar = avatar;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.coordination = new LatLng(latitude , longitude);
-    }
-
-    public House(int id, String title, String description, String avatarPath, LatLng coordination) {
-        this(id , title , description , avatarPath);
-        this.coordination = coordination;
-        this.latitude = coordination.latitude;
-        this.longitude = coordination.longitude;
-
+        coordination = new LatLng(latitude , longitude);
     }
 
     public String getTitle() {
@@ -55,12 +43,12 @@ public class House implements Parcelable {
         this.description = description;
     }
 
-    public String getAvatarPath() {
-        return avatarPath;
+    public byte[] getAvatar() {
+        return avatar;
     }
 
-    public void setAvatarPath(String avatarPath) {
-        this.avatarPath = avatarPath;
+    public void setAvatar(byte[] avatar) {
+        this.avatar = avatar;
     }
 
     public int getId() {
@@ -105,7 +93,8 @@ public class House implements Parcelable {
         dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(description);
-        dest.writeString(avatarPath);
+        dest.writeInt(avatar.length);
+        dest.writeByteArray(avatar);
         dest.writeParcelable(coordination ,i);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
@@ -125,7 +114,8 @@ public class House implements Parcelable {
         id = in.readInt();
         title = in.readString();
         description = in.readString();
-        avatarPath = in.readString();
+        avatar = new byte[in.readInt()];
+        in.readByteArray(avatar);
         coordination = in.readParcelable(getClass().getClassLoader());
         latitude = in.readDouble();
         longitude = in.readDouble();

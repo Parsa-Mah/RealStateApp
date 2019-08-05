@@ -42,7 +42,7 @@ public class ShowPropertyActivity extends AppCompatActivity implements OnMapRead
     }
 
     private void bindDataToWidgets() {
-        imageViewShowProperty.setImageResource(Integer.parseInt(house.getAvatarPath()));
+        //imageViewShowProperty.setImageResource(Integer.parseInt(house.getAvatarPath()));
         textViewTitle.setText(house.getTitle());
         textViewDescription.setText(house.getDescription());
     }

@@ -3,7 +3,10 @@ package com.example.realstate.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,8 +129,9 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
         public void bind(House house) {
             title.setText(house.getTitle());
             description.setText(house.getDescription());
-            avatar.setImageResource(Integer.parseInt(house.getAvatarPath()));
-
+           // avatar.setImageResource(Integer.parseInt(house.getAvatarPath()));
+            Bitmap bm = BitmapFactory.decodeByteArray(house.getAvatar(), 0, house.getAvatar().length);
+            avatar.setImageBitmap(bm);
 
         }
     }
