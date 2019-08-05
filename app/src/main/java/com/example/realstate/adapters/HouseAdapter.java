@@ -17,6 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.realstate.R;
 import com.example.realstate.ShowPropertyActivity;
 import com.example.realstate.models.House;
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,7 +133,15 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
             title.setText(house.getTitle());
             description.setText(house.getDescription());
            // avatar.setImageResource(Integer.parseInt(house.getAvatarPath()));
-            Bitmap bm = BitmapFactory.decodeFile(house.getAvatar());
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+            File f = new File(house.getAvatar());
+            Bitmap bm = null;
+            try {
+                bm = BitmapFactory.decodeStream(new FileInputStream(f), null, options);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             avatar.setImageBitmap(bm);
 
         }
