@@ -6,9 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         getHouseListFromDB();
         showData();
         floatingActionButtonSetOnClickListener();
+        Log.i("Parsa", Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.drawable.home1).toString());
 
     }
 

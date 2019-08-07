@@ -1,11 +1,14 @@
 package com.example.realstate;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,7 +17,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.realstate.models.House;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class AddPropertyActivity extends AppCompatActivity {
@@ -69,11 +72,7 @@ public class AddPropertyActivity extends AppCompatActivity {
         init();
 
         imageView.setOnClickListener(View -> {
-            try {
-                requestPermissionForReadExtertalStorage();
-            } catch (Exception e) {
-                Toast.makeText(this, "Something bad happened", Toast.LENGTH_SHORT).show();
-            }
+
             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(intent, SELECTED_IMAGE);
         });
@@ -108,16 +107,27 @@ public class AddPropertyActivity extends AppCompatActivity {
         editTextDescription = findViewById(R.id.editTextDescription);
         imageView = findViewById(R.id.imageViewAddProperty);
         buttonAddProperty = findViewById(R.id.buttonAddProperty);
-    }
+        new AlertDialog.Builder(this).setTitle("IMPORTANT").setMessage("In order to use Add Property you need to grant us Camera and Storage Permission")
+                .setPositiveButton("OK", null).show();
 
-    public void requestPermissionForReadExtertalStorage() throws Exception {
         try {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0x3);
+            requestPermission();
         } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
+            Toast.makeText(this, "Please grant \"ALL\" Premissions", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 
+    public void requestPermission() throws Exception {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                throw new IOException();
+            }
+
+        }
+
+    }
 }
 

@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,13 +138,8 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             File f = new File(house.getAvatar());
-            Bitmap bm = null;
-            try {
-                bm = BitmapFactory.decodeStream(new FileInputStream(f), null, options);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            avatar.setImageBitmap(bm);
+            Log.i("Parsa2", house.getAvatar());
+            avatar.setImageURI(Uri.fromFile(f));
 
         }
     }
