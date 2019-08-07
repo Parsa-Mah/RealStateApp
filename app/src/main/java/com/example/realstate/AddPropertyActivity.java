@@ -107,9 +107,6 @@ public class AddPropertyActivity extends AppCompatActivity {
         editTextDescription = findViewById(R.id.editTextDescription);
         imageView = findViewById(R.id.imageViewAddProperty);
         buttonAddProperty = findViewById(R.id.buttonAddProperty);
-        new AlertDialog.Builder(this).setTitle("IMPORTANT").setMessage("In order to use Add Property you need to grant us Camera and Storage Permission")
-                .setPositiveButton("OK", null).show();
-
         try {
             requestPermission();
         } catch (Exception e) {
@@ -119,7 +116,8 @@ public class AddPropertyActivity extends AppCompatActivity {
     }
 
     public void requestPermission() throws Exception {
-
+        new AlertDialog.Builder(this).setTitle("IMPORTANT").setMessage("In order to use Add Property you need to grant us Camera and Storage Permission")
+                .setPositiveButton("OK", null).show();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
