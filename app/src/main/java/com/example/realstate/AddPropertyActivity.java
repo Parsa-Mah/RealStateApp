@@ -109,16 +109,17 @@ public class AddPropertyActivity extends AppCompatActivity {
         editTextDescription = findViewById(R.id.editTextDescription);
         imageView = findViewById(R.id.imageViewAddProperty);
         buttonAddProperty = findViewById(R.id.buttonAddProperty);
-        new AlertDialog.Builder(this).setTitle("IMPORTANT").setMessage("In order to use Add Property you need to grant us Camera and Storage Permission")
-                .setPositiveButton("OK", (dialogInterface, i) -> {
-                    try {
-                        requestPermission();
-                    } catch (Exception e) {
-                        Toast.makeText(this, "Please grant \"ALL\" Premissions", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                }).show();
-
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            new AlertDialog.Builder(this).setTitle("IMPORTANT").setMessage("In order to use Add Property you need to grant us Camera and Storage Permission")
+                    .setPositiveButton("OK", (dialogInterface, i) -> {
+                        try {
+                            requestPermission();
+                        } catch (Exception e) {
+                            Toast.makeText(this, "Please grant \"ALL\" Premissions", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    }).show();
+        }
     }
 
     public void requestPermission() throws Exception {
