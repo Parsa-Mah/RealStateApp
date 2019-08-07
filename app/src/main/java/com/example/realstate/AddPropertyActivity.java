@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -107,17 +109,20 @@ public class AddPropertyActivity extends AppCompatActivity {
         editTextDescription = findViewById(R.id.editTextDescription);
         imageView = findViewById(R.id.imageViewAddProperty);
         buttonAddProperty = findViewById(R.id.buttonAddProperty);
-        try {
-            requestPermission();
-        } catch (Exception e) {
-            Toast.makeText(this, "Please grant \"ALL\" Premissions", Toast.LENGTH_SHORT).show();
-            finish();
-        }
+        new AlertDialog.Builder(this).setTitle("IMPORTANT").setMessage("In order to use Add Property you need to grant us Camera and Storage Permission")
+                .setPositiveButton("OK", (dialogInterface, i) -> {
+                    try {
+                        requestPermission();
+                    } catch (Exception e) {
+                        Toast.makeText(this, "Please grant \"ALL\" Premissions", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }).show();
+
     }
 
     public void requestPermission() throws Exception {
-        new AlertDialog.Builder(this).setTitle("IMPORTANT").setMessage("In order to use Add Property you need to grant us Camera and Storage Permission")
-                .setPositiveButton("OK", null).show();
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, 1);
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
