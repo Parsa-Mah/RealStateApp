@@ -2,9 +2,11 @@ package com.example.realstate;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 
+import com.example.realstate.models.House;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -14,18 +16,23 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
     private GoogleMap mMap;
+    private House house;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        init();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+    }
+
+    private void init() {
+        house = getIntent().getParcelableExtra("loc");
     }
 
 
@@ -45,6 +52,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng isfahan = new LatLng(32.642375, 51.667377);
         mMap.addMarker(new MarkerOptions().position(isfahan).title("Marker in Isfahan"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(isfahan, 15f));
-        Snackbar.make(findViewById(R.id.map),"Hi Arya", Snackbar.LENGTH_LONG).show();
+        Snackbar.make(findViewById(R.id.map), "Hi Arya", Snackbar.LENGTH_LONG).show();
+        mMap.setOnMapLongClickListener(latLng -> {
+            mMap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Marker of Finder"));
+
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.save_location)
+                    .setMessage(R.string.save_this_location)
+                    .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+                        Intent intent = new Intent();
+                        house.setLatitude(latLng.latitude);
+                        house.setLongitude(latLng.longitude);
+                        intent.putExtra("loc" , house);
+                        setResult(RESULT_OK , intent);
+                        finish();
+                    })
+                    .setNegativeButton(R.string.no, (dialogInterface, i) -> {
+                        mMap.clear();
+                    }).show();
+
+
+        });
     }
 }

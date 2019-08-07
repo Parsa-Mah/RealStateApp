@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,40 +22,44 @@ import android.widget.Toast;
 
 import com.example.realstate.models.House;
 
+import java.util.Objects;
+
 public class AddPropertyActivity extends AppCompatActivity {
 
     EditText editTextTitle;
     EditText editTextDescription;
     Button buttonAddLocation;
     Button buttonAddProperty;
-    int mode = 1;
+    House house = new House();
     ImageView imageView;
-    private static final int SELECTED_IMAGE = 1;
+    private static final int SELECTED_IMAGE;
+    private static final int LOCATION_SAVED;
+
+    static {
+        SELECTED_IMAGE = 1;
+        LOCATION_SAVED = 2;
+    }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
-            case SELECTED_IMAGE:
-                if(resultCode == RESULT_OK){
-                    Uri uri = data.getData();
-                    String[] p = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = getContentResolver().query(uri, p, null, null, null);
-                    cursor.moveToFirst();
-                    int columnIndex = cursor.getColumnIndex(p[0]);
-                    String filePath = cursor.getString(columnIndex);
-                    cursor.close();
-
-                    Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-                    Drawable drawable = new BitmapDrawable(AddPropertyActivity.this.getResources(), bitmap);
-                    imageView.setBackground(drawable);
-
-                }
-                break;
-                default:
-                    break;
+        if (resultCode == RESULT_OK && requestCode == SELECTED_IMAGE) {
+            Uri uri = Objects.requireNonNull(data).getData();
+            String[] p = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getContentResolver().query(uri, p, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(p[0]);
+            String filePath = cursor.getString(columnIndex);
+            cursor.close();
+            Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+            Drawable drawable = new BitmapDrawable(AddPropertyActivity.this.getResources(), bitmap);
+            imageView.setBackground(drawable);
+        }else if (resultCode == RESULT_OK && requestCode == LOCATION_SAVED){
+            assert data != null;
+            house = data.getParcelableExtra("loc");
         }
+
     }
 
     @Override
@@ -66,7 +71,7 @@ public class AddPropertyActivity extends AppCompatActivity {
         imageView.setOnClickListener(View -> {
             try {
                 requestPermissionForReadExtertalStorage();
-            }catch (Exception e){
+            } catch (Exception e) {
                 Toast.makeText(this, "Something bad happened", Toast.LENGTH_SHORT).show();
             }
             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -75,17 +80,16 @@ public class AddPropertyActivity extends AppCompatActivity {
 
 
         buttonAddLocation.setOnClickListener(view -> {
-
-            String title = editTextTitle.getText().toString().trim();
-            String description = editTextDescription.getText().toString().trim();
-                    if (isValid(title, description)) {
-                        Intent intent = new Intent(AddPropertyActivity.this, MapsActivity.class);
-                        House house = new House();
-                        house.setTitle("title");
-                        house.setDescription("description");
-                        intent.putExtra("location", house);
-                        startActivity(intent);
-                    }
+          //  String title = editTextTitle.getText().toString().trim();
+          //  String description = editTextDescription.getText().toString().trim();
+           // if (isValid(title, description)) {
+                Intent intent = new Intent(AddPropertyActivity.this, MapsActivity.class);
+               // House house = new House();
+               // house.setTitle("title");
+                //house.setDescription("description");
+                intent.putExtra("loc", house);
+                startActivityForResult(intent, LOCATION_SAVED);
+         //   }
 
 
         });
@@ -105,6 +109,7 @@ public class AddPropertyActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imageViewAddProperty);
         buttonAddProperty = findViewById(R.id.buttonAddProperty);
     }
+
     public void requestPermissionForReadExtertalStorage() throws Exception {
         try {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0x3);

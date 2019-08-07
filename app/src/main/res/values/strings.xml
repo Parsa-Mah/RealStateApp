@@ -2,4 +2,8 @@
     <string name="app_name">RealStateApp</string>
     <string name="not_exist_location">Location List is Empty</string>
     <string name="title_activity_maps">Map</string>
+    <string name="save_location">Save Location</string>
+    <string name="save_this_location">Are you sure you want to save this location?</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
 </resources>
