@@ -6,4 +6,11 @@
     <string name="save_this_location">Are you sure you want to save this location?</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
+    <string name="retry">Retry</string>
+    <string name="go_back">Go Back</string>
+    <string name="location_saved_canceled">Location not saved. you should turn on your GPS</string>
+    <string name="access_permission_canceled">Access to permissions canceled. Please accept permissions</string>
+    <string name="select_location">Please Select Location</string>
+    <string name="title_empty">Title is empty!</string>
+    <string name="description_empty">Description is empty!</string>
 </resources>

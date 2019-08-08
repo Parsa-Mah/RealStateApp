@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.realstate.models.House;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,7 +62,7 @@ public class AddPropertyActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK)
+        if (resultCode == Activity.RESULT_OK) {
             if (requestCode == GALLERY_REQUEST_CODE) {
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
@@ -71,10 +72,22 @@ public class AddPropertyActivity extends AppCompatActivity {
                 String imgDecodableString = cursor.getString(columnIndex);
                 cursor.close();
                 imageView.setImageBitmap(BitmapFactory.decodeFile(imgDecodableString));
-            }else if (requestCode == CAMERA_REQUEST_CODE){
+            } else if (requestCode == CAMERA_REQUEST_CODE) {
                 captureFromCamera();
                 imageView.setImageURI(Uri.parse(cameraFilePath));
+            } else if (requestCode == LOCATION_SAVED) {
+                assert data != null;
+                house = data.getParcelableExtra("loc");
             }
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            if (requestCode == LOCATION_SAVED) {
+                Toast.makeText(this, R.string.access_permission_canceled, Toast.LENGTH_LONG).show();
+            }
+        }  else if (resultCode == Activity.RESULT_FIRST_USER) {
+            if (requestCode == LOCATION_SAVED) {
+                Toast.makeText(this, R.string.location_saved_canceled, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
@@ -86,38 +99,49 @@ public class AddPropertyActivity extends AppCompatActivity {
         imageView.setOnClickListener(View -> {
             new AlertDialog.Builder(this).setTitle("Chose your Option!").setMessage("How do you want to proceed")
                     .setPositiveButton("CAMERA", (dialogInterface, i) -> {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                startActivityForResult(intent, CAMERA_REQUEST_CODE);
-            }).setNegativeButton("GALERY", (DialogInterface, i) -> {
+                        Intent intent = new Intent(Intent.ACTION_PICK);
+                        startActivityForResult(intent, CAMERA_REQUEST_CODE);
+                    }).setNegativeButton("GALERY", (DialogInterface, i) -> {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 String[] mimeTypes = {"image/jpeg", "image/png"};
-                intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
                 startActivityForResult(intent, GALLERY_REQUEST_CODE);
             }).show();
         });
 
 
         buttonAddLocation.setOnClickListener(view -> {
-          //  String title = editTextTitle.getText().toString().trim();
-          //  String description = editTextDescription.getText().toString().trim();
-           // if (isValid(title, description)) {
-                Intent intent = new Intent(AddPropertyActivity.this, MapsActivity.class);
-               // House house = new House();
-               // house.setTitle("title");
-                //house.setDescription("description");
-                intent.putExtra("loc", house);
-                startActivityForResult(intent, LOCATION_SAVED);
-         //   }
+            Intent intent = new Intent(AddPropertyActivity.this, MapsActivity.class);
+            intent.putExtra("loc", house);
+            startActivityForResult(intent, LOCATION_SAVED);
+        });
+        buttonAddProperty.setOnClickListener(view -> {
+            String title = editTextTitle.getText().toString().trim();
+            String description = editTextTitle.getText().toString().trim();
+            if (isValid(title, description)) {
+                if (house.getLongitude() != 0.0 && house.getLongitude() != 0.0){
 
+                }else {
+                    Toast.makeText(this , R.string.select_location , Toast.LENGTH_LONG).show();
+                }
+
+            }
 
         });
     }
 
     private boolean isValid(String title, String description) {
-        if (title.isEmpty() && description.isEmpty())
-            return false;//todo:avaz kardan return ha + if is empty edittext request foucus to this edittext+show toast for error
-        //todo:check kardan mahdoodiyat 3<title <50 va 5<description<500
+        if (title.isEmpty()){
+            Toast.makeText(this , R.string.title_empty , Toast.LENGTH_LONG).show();
+            editTextTitle.requestFocus();
+            return false;
+
+        } else if(description.isEmpty()){
+            Toast.makeText(this , R.string.description_empty , Toast.LENGTH_LONG).show();
+            editTextTitle.requestFocus();
+            return false;
+        }
         return true;
     }
 
@@ -151,7 +175,8 @@ public class AddPropertyActivity extends AppCompatActivity {
         }
 
     }
-    private File createImageFile() throws IOException{
+
+    private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
@@ -159,12 +184,13 @@ public class AddPropertyActivity extends AppCompatActivity {
         cameraFilePath = "file://" + image.getAbsolutePath();
         return image;
     }
-    private void captureFromCamera(){
+
+    private void captureFromCamera() {
         try {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", createImageFile()));
             startActivityForResult(intent, CAMERA_REQUEST_CODE);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
