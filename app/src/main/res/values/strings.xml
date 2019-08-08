@@ -13,4 +13,7 @@
     <string name="select_location">Please Select Location</string>
     <string name="title_empty">Title is empty!</string>
     <string name="description_empty">Description is empty!</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="save">Save</string>
 </resources>

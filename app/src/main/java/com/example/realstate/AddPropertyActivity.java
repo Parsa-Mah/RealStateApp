@@ -1,15 +1,5 @@
 package com.example.realstate;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -21,9 +11,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.widget.ImageView;
 import android.widget.Toast;
-
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import com.example.realstate.models.House;
 
 import java.io.File;
@@ -32,12 +29,10 @@ import java.util.Date;
 
 public class AddPropertyActivity extends AppCompatActivity {
 
-    AppCompatEditText editTextTitle;
-    AppCompatEditText editTextDescription;
-    AppCompatImageView imgvAddLocation;
+    AppCompatEditText editTextTitle ,editTextDescription;
+    AppCompatImageView imgvAddLocation,addImage;
     AppCompatButton buttonAddProperty;
     House house = new House();
-    ImageView imageView;
     private String cameraFilePath;
     private static final int SELECTED_IMAGE;
     private static final int LOCATION_SAVED;
@@ -64,10 +59,11 @@ public class AddPropertyActivity extends AppCompatActivity {
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 String imgDecodableString = cursor.getString(columnIndex);
                 cursor.close();
-                imageView.setImageBitmap(BitmapFactory.decodeFile(imgDecodableString));
+                addImage.setImageResource(0);
+                addImage.setImageBitmap(BitmapFactory.decodeFile(imgDecodableString));
             } else if (requestCode == CAMERA_REQUEST_CODE) {
                 captureFromCamera();
-                imageView.setImageURI(Uri.parse(cameraFilePath));
+                addImage.setImageURI(Uri.parse(cameraFilePath));
             } else if (requestCode == LOCATION_SAVED) {
                 assert data != null;
                 house = data.getParcelableExtra("loc");
@@ -89,7 +85,7 @@ public class AddPropertyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_property);
         init();
 
-        imageView.setOnClickListener(View -> {
+        addImage.setOnClickListener(View -> {
             new AlertDialog.Builder(this).setTitle("Chose your Option!").setMessage("How do you want to proceed")
                     .setPositiveButton("CAMERA", (dialogInterface, i) -> {
                         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -142,7 +138,7 @@ public class AddPropertyActivity extends AppCompatActivity {
         imgvAddLocation = findViewById(R.id.imgv_add_location);
         editTextTitle = findViewById(R.id.et_titel);
         editTextDescription = findViewById(R.id.et_description);
-        imageView = findViewById(R.id.imgv_add_property);
+        addImage = findViewById(R.id.imgv_add_property);
         buttonAddProperty = findViewById(R.id.btn_add_property);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             new AlertDialog.Builder(this).setTitle("IMPORTANT").setMessage("In order to use Add Property you need to grant us Camera and Storage Permission")
