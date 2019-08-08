@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
@@ -63,8 +64,10 @@ public class AddPropertyActivity extends AppCompatActivity {
                 addImage.setImageResource(0);
                 addImage.setImageBitmap(BitmapFactory.decodeFile(imgDecodableString));
             } else if (requestCode == CAMERA_REQUEST_CODE) {
-                captureFromCamera();
-                addImage.setImageURI(Uri.parse(cameraFilePath));
+                //captureFromCamera();
+                //addImage.setImageURI(Uri.parse(cameraFilePath));
+                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+                addImage.setImageBitmap(bitmap);
             } else if (requestCode == LOCATION_SAVED) {
                 assert data != null;
                 house = data.getParcelableExtra("loc");
@@ -89,8 +92,9 @@ public class AddPropertyActivity extends AppCompatActivity {
         addImage.setOnClickListener(View -> {
             new AlertDialog.Builder(this).setTitle("Chose your Option!").setMessage("How do you want to proceed")
                     .setPositiveButton("CAMERA", (dialogInterface, i) -> {
-                        Intent intent = new Intent(Intent.ACTION_PICK);
+                        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                         startActivityForResult(intent, CAMERA_REQUEST_CODE);
+                        //captureFromCamera();
                     }).setNegativeButton("GALERY", (DialogInterface, i) -> {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
@@ -177,7 +181,7 @@ public class AddPropertyActivity extends AppCompatActivity {
 
     private void captureFromCamera() {
         try {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", createImageFile()));
             startActivityForResult(intent, CAMERA_REQUEST_CODE);
         } catch (IOException e) {
