@@ -12,39 +12,29 @@ import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.realstate.models.House;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
 
 public class AddPropertyActivity extends AppCompatActivity {
 
     AppCompatEditText editTextTitle;
     AppCompatEditText editTextDescription;
-    AppCompatImageView buttonAddLocation;
+    AppCompatImageView imgvAddLocation;
     AppCompatButton buttonAddProperty;
     House house = new House();
     ImageView imageView;
@@ -114,7 +104,7 @@ public class AddPropertyActivity extends AppCompatActivity {
         });
 
 
-        buttonAddLocation.setOnClickListener(view -> {
+        imgvAddLocation.setOnClickListener(view -> {
             Intent intent = new Intent(AddPropertyActivity.this, MapsActivity.class);
             intent.putExtra("loc", house);
             startActivityForResult(intent, LOCATION_SAVED);
@@ -149,11 +139,11 @@ public class AddPropertyActivity extends AppCompatActivity {
     }
 
     private void init() {
-        buttonAddLocation = findViewById(R.id.buttonAddLocation);
-        editTextTitle = findViewById(R.id.editTextTitel);
-        editTextDescription = findViewById(R.id.editTextDescription);
-        imageView = findViewById(R.id.imageViewAddProperty);
-        buttonAddProperty = findViewById(R.id.buttonAddProperty);
+        imgvAddLocation = findViewById(R.id.imgv_add_location);
+        editTextTitle = findViewById(R.id.et_titel);
+        editTextDescription = findViewById(R.id.et_description);
+        imageView = findViewById(R.id.imgv_add_property);
+        buttonAddProperty = findViewById(R.id.btn_add_property);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             new AlertDialog.Builder(this).setTitle("IMPORTANT").setMessage("In order to use Add Property you need to grant us Camera and Storage Permission")
                     .setPositiveButton("OK", (dialogInterface, i) -> {

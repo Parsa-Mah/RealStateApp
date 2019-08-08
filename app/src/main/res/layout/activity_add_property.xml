@@ -9,7 +9,7 @@
 
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imageViewAddProperty"
+        android:id="@+id/imgv_add_property"
         android:layout_width="180dp"
         android:layout_height="180dp"
         android:layout_marginStart="8dp"
@@ -17,14 +17,14 @@
         android:layout_marginEnd="8dp"
         android:background="@drawable/add"
         android:clickable="true"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTitel"
+        app:layout_constraintBottom_toTopOf="@+id/et_titel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/editTextTitel"
+        android:id="@+id/et_titel"
         android:layout_width="0dp"
         android:layout_height="35dp"
         android:layout_marginStart="32dp"
@@ -38,10 +38,10 @@
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewAddProperty" />
+        app:layout_constraintTop_toBottomOf="@+id/imgv_add_property" />
 
     <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/editTextDescription"
+        android:id="@+id/et_description"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="24dp"
@@ -54,23 +54,23 @@
         android:hint="Description"
         android:inputType="textMultiLine"
         android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@id/buttonAddLocation"
+        app:layout_constraintBottom_toTopOf="@id/imgv_add_location"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTitel" />
+        app:layout_constraintTop_toBottomOf="@+id/et_titel" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/buttonAddLocation"
+        android:id="@+id/imgv_add_location"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonAddProperty"
+        app:layout_constraintBottom_toTopOf="@id/btn_add_property"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextDescription"
+        app:layout_constraintTop_toBottomOf="@id/et_description"
         app:srcCompat="@drawable/location" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonAddProperty"
+        android:id="@+id/btn_add_property"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -83,7 +83,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/buttonAddLocation"
+        app:layout_constraintTop_toBottomOf="@id/imgv_add_location"
 
         />
 
