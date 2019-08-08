@@ -3,6 +3,9 @@ package com.example.realstate;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -39,10 +42,10 @@ import java.util.Objects;
 
 public class AddPropertyActivity extends AppCompatActivity {
 
-    EditText editTextTitle;
-    EditText editTextDescription;
-    Button buttonAddLocation;
-    Button buttonAddProperty;
+    AppCompatEditText editTextTitle;
+    AppCompatEditText editTextDescription;
+    AppCompatImageView buttonAddLocation;
+    AppCompatButton buttonAddProperty;
     House house = new House();
     ImageView imageView;
     private String cameraFilePath;
