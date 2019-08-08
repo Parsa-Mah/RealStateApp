@@ -65,12 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         requestPermissions();
         if (canGetLocation()) {
             mapSetOnMapLongClickListener();
-            mMap.setOnMyLocationButtonClickListener(() -> {
-                if (!canGetLocation()) {
-                    showSettingsAlert();
-                }
-                return false;
-            });
+            mapSetOnMyLocationButtonClickListener();
         } else {
             showSettingsAlert();
 
@@ -84,6 +79,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Snackbar.make(findViewById(R.id.map), "Hi Arya", Snackbar.LENGTH_LONG).show();
         */
 
+    }
+
+    private void mapSetOnMyLocationButtonClickListener() {
+        mMap.setOnMyLocationButtonClickListener(() -> {
+            if (!canGetLocation()) {
+                showSettingsAlert();
+            }
+            return false;
+        });
     }
 
     private void mapSetOnMapLongClickListener() {
