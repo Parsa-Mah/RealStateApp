@@ -11,6 +11,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -30,13 +31,18 @@ import java.util.Objects;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private static final int ACCESS_FINE_LOCATION_REQUEST_CODE;
     private static final int ACCESS_COARSE_LOCATION_REQUEST_CODE;
+    public static final int PERMISSION_CANCELED ;
+    public static final int LOCATION_OFF ;
     private GoogleMap mMap;
     private House house;
+
 
 
     static {
         ACCESS_FINE_LOCATION_REQUEST_CODE = 85;
         ACCESS_COARSE_LOCATION_REQUEST_CODE = 69;
+        PERMISSION_CANCELED = 32;
+        LOCATION_OFF = 44;
     }
 
 
@@ -48,7 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        Objects.requireNonNull(mapFragment).getMapAsync(this);
 
     }
 
@@ -92,6 +98,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void zoomToMyLocation() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
+        assert locationManager != null;
         @SuppressLint("MissingPermission")
         Location location = locationManager.getLastKnownLocation(Objects.requireNonNull(locationManager.getBestProvider(criteria, false)));
         if (location != null)
@@ -132,9 +139,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         setResult(RESULT_OK, intent);
                         finish();
                     })
-                    .setNegativeButton(R.string.no, (dialogInterface, i) -> {
-                        mMap.clear();
-                    }).show();
+                    .setNegativeButton(R.string.no, (dialogInterface, i) -> mMap.clear()).show();
 
 
         });
@@ -155,7 +160,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         })
                 .setNegativeButton(R.string.go_back, (dialogInterface, i) -> {
                     Intent intent = new Intent();
-                    setResult(RESULT_FIRST_USER, intent);
+                    setResult(LOCATION_OFF, intent);
                     finish();
                 })
                 .setNeutralButton(R.string.retry, (dialogInterface, i) -> {
@@ -222,8 +227,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @SuppressLint("MissingPermission")
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                           int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (requestCode == ACCESS_FINE_LOCATION_REQUEST_CODE) {
             if (permissions.length == 1 &&
                     permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
@@ -232,7 +237,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
             } else {
                 Intent intent = new Intent();
-                setResult(RESULT_CANCELED, intent);
+                setResult(PERMISSION_CANCELED, intent);
                 finish();
                 //finish();
                 // Permission was denied. Display an error message.
@@ -245,7 +250,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mMap.getUiSettings().setMyLocationButtonEnabled(true);
                 } else {
                     Intent intent = new Intent();
-                    setResult(RESULT_CANCELED, intent);
+                    setResult(PERMISSION_CANCELED, intent);
                     finish();
                     //finish();
                     // Permission was denied. Display an error message.

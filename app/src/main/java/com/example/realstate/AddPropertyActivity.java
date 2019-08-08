@@ -26,6 +26,7 @@ import com.example.realstate.models.House;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.Objects;
 
 public class AddPropertyActivity extends AppCompatActivity {
 
@@ -68,11 +69,11 @@ public class AddPropertyActivity extends AppCompatActivity {
                 assert data != null;
                 house = data.getParcelableExtra("loc");
             }
-        } else if (resultCode == Activity.RESULT_CANCELED) {
+        } else if (resultCode == MapsActivity.PERMISSION_CANCELED) {
             if (requestCode == LOCATION_SAVED) {
                 Toast.makeText(this, R.string.access_permission_canceled, Toast.LENGTH_LONG).show();
             }
-        }  else if (resultCode == Activity.RESULT_FIRST_USER) {
+        }  else if (resultCode == MapsActivity.LOCATION_OFF) {
             if (requestCode == LOCATION_SAVED) {
                 Toast.makeText(this, R.string.location_saved_canceled, Toast.LENGTH_LONG).show();
             }
@@ -106,7 +107,7 @@ public class AddPropertyActivity extends AppCompatActivity {
             startActivityForResult(intent, LOCATION_SAVED);
         });
         buttonAddProperty.setOnClickListener(view -> {
-            String title = editTextTitle.getText().toString().trim();
+            String title = Objects.requireNonNull(editTextTitle.getText()).toString().trim();
             String description = editTextTitle.getText().toString().trim();
             if (isValid(title, description)) {
                 if (house.getLongitude() != 0.0 && house.getLongitude() != 0.0){
