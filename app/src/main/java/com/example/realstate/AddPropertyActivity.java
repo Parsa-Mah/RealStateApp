@@ -12,13 +12,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatEditText;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -31,8 +31,8 @@ import java.util.Objects;
 
 public class AddPropertyActivity extends AppCompatActivity {
 
-    AppCompatEditText editTextTitle ,editTextDescription;
-    AppCompatImageView imgvAddLocation,addImage;
+    TextView editTextTitle ,editTextDescription;
+    ImageView imgvAddLocation,addImage, imgv_add_property;
     AppCompatButton buttonAddProperty;
     House house = new House();
     private String cameraFilePath;
@@ -64,10 +64,8 @@ public class AddPropertyActivity extends AppCompatActivity {
                 addImage.setImageResource(0);
                 addImage.setImageBitmap(BitmapFactory.decodeFile(imgDecodableString));
             } else if (requestCode == CAMERA_REQUEST_CODE) {
-                //captureFromCamera();
-                //addImage.setImageURI(Uri.parse(cameraFilePath));
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                addImage.setImageBitmap(bitmap);
+                Bitmap bitmap = BitmapFactory.decodeFile(cameraFilePath.toString());
+                imgv_add_property.setImageBitmap(bitmap);
             } else if (requestCode == LOCATION_SAVED) {
                 assert data != null;
                 house = data.getParcelableExtra("loc");
@@ -89,20 +87,17 @@ public class AddPropertyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_property);
         init();
 
-        addImage.setOnClickListener(View -> {
-            new AlertDialog.Builder(this).setTitle("Chose your Option!").setMessage("How do you want to proceed")
-                    .setPositiveButton("CAMERA", (dialogInterface, i) -> {
-                        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(intent, CAMERA_REQUEST_CODE);
-                        //captureFromCamera();
-                    }).setNegativeButton("GALERY", (DialogInterface, i) -> {
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                String[] mimeTypes = {"image/jpeg", "image/png"};
-                intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-                startActivityForResult(intent, GALLERY_REQUEST_CODE);
-            }).show();
-        });
+        addImage.setOnClickListener(View -> new AlertDialog.Builder(this).setTitle("Chose your Option!").setMessage("How do you want to proceed")
+                .setPositiveButton("CAMERA", (dialogInterface, i) -> {
+                    dispatchTakePictureIntent();
+                    //captureFromCamera();
+                }).setNegativeButton("GALERY", (DialogInterface, i) -> {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            String[] mimeTypes = {"image/jpeg", "image/png"};
+            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+            startActivityForResult(intent, GALLERY_REQUEST_CODE);
+        }).show());
 
 
         imgvAddLocation.setOnClickListener(view -> {
@@ -141,7 +136,8 @@ public class AddPropertyActivity extends AppCompatActivity {
 
     private void init() {
         imgvAddLocation = findViewById(R.id.imgv_add_location);
-        editTextTitle = findViewById(R.id.et_titel);
+        imgv_add_property = findViewById(R.id.imgv_add_property);
+        editTextTitle = findViewById(R.id.editTextTitle);
         editTextDescription = findViewById(R.id.et_description);
         addImage = findViewById(R.id.imgv_add_property);
         buttonAddProperty = findViewById(R.id.btn_add_property);
@@ -173,19 +169,28 @@ public class AddPropertyActivity extends AppCompatActivity {
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM), "Camera");
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
         cameraFilePath = "file://" + image.getAbsolutePath();
         return image;
     }
 
-    private void captureFromCamera() {
-        try {
-            Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", createImageFile()));
-            startActivityForResult(intent, CAMERA_REQUEST_CODE);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void dispatchTakePictureIntent(){
+        Intent takePicturesIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(takePicturesIntent.resolveActivity(getPackageManager()) != null){
+            File photoFile = null;
+            try{
+                photoFile = createImageFile();
+                cameraFilePath = photoFile.getPath();
+            }catch (IOException e){
+                Toast.makeText(this, "Error while creating the image file", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+            if (photoFile != null){
+                Uri photoURI = FileProvider.getUriForFile(this, "com.example.realstate.fileprovider", photoFile);
+                takePicturesIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePicturesIntent, CAMERA_REQUEST_CODE);
+            }
         }
     }
 }
