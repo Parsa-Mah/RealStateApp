@@ -33,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
         getHouseListFromDB();
         showData();
         floatingActionButtonSetOnClickListener();
-        Log.i("Parsa", Uri.parse("android.resource://" + BuildConfig.APPLICATION_ID + "/" + R.drawable.home1).toString());
-
     }
 
     private void floatingActionButtonSetOnClickListener() {
@@ -61,11 +59,7 @@ public class MainActivity extends AppCompatActivity {
         houseList = new ArrayList<>();
         RealStateAppSQLiteOpenHelper realStateAppSQLiteOpenHelper = new RealStateAppSQLiteOpenHelper(this);
         db = realStateAppSQLiteOpenHelper.getReadableDatabase();
-        String[] colomns = {"_id", "title", "description", "Image_file_path", "latitude", "longitude"};
-        cursor = db.query("RealStateDBTable", colomns, null, null, null, null, null);
-        while (cursor.moveToNext()) {
-            houseList.add(new House(cursor.getInt(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getDouble(4), cursor.getDouble(5)));
-        }
+        houseList = realStateAppSQLiteOpenHelper.readFromDB(db,-1);
     }
 
     private void init() {
