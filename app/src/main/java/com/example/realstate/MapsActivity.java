@@ -14,7 +14,6 @@ import android.provider.Settings;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.realstate.models.House;
@@ -29,18 +28,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.Objects;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-    private static final int ACCESS_FINE_LOCATION_REQUEST_CODE;
-    private static final int ACCESS_COARSE_LOCATION_REQUEST_CODE;
-    public static final int PERMISSION_CANCELED ;
-    public static final int LOCATION_OFF ;
+    private static final int ACCESS_LOCATION_REQUEST_CODE;
+    public static final int PERMISSION_CANCELED;
+    public static final int LOCATION_OFF;
     private GoogleMap mMap;
     private House house;
 
 
-
     static {
-        ACCESS_FINE_LOCATION_REQUEST_CODE = 85;
-        ACCESS_COARSE_LOCATION_REQUEST_CODE = 69;
+        ACCESS_LOCATION_REQUEST_CODE = 85;
         PERMISSION_CANCELED = 32;
         LOCATION_OFF = 44;
     }
@@ -75,50 +71,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        requestPermissions();
-        if (canGetLocation()) {
+        if (requestPermissions()) {
             zoomToMyLocation();
             mapSetOnMapLongClickListener();
             mapSetOnMyLocationButtonClickListener();
-        } else {
-            showSettingsAlert();
 
         }
 
 
-        /*
-        LatLng isfahan = new LatLng(32.642375, 51.667377);
-        mMap.addMarker(new MarkerOptions().position(isfahan).title("Marker in Isfahan"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(isfahan, 15f));
-        Snackbar.make(findViewById(R.id.map), "Hi Arya", Snackbar.LENGTH_LONG).show();
-        */
-
     }
 
     private void zoomToMyLocation() {
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        assert locationManager != null;
-        @SuppressLint("MissingPermission")
-        Location location = locationManager.getLastKnownLocation(Objects.requireNonNull(locationManager.getBestProvider(criteria, false)));
-        if (location != null)
-        {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+        if (!canGetLocation()) {
+            showGPSAlert();
+        } else {
+            LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            Criteria criteria = new Criteria();
+            assert locationManager != null;
 
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-                    .zoom(17)                   // Sets the zoom
-                    .bearing(90)                // Sets the orientation of the camera to east
-                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, ACCESS_LOCATION_REQUEST_CODE);
+
+            }
+            Location location = locationManager.getLastKnownLocation(Objects.requireNonNull(locationManager.getBestProvider(criteria, false)));
+
+            if (location != null) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+                        .zoom(17)                   // Sets the zoom
+                        .bearing(90)                // Sets the orientation of the camera to east
+                        .tilt(40)                   // Sets the tilt of the camera to 30 degrees
+                        .build();                   // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
         }
     }
 
     private void mapSetOnMyLocationButtonClickListener() {
         mMap.setOnMyLocationButtonClickListener(() -> {
             if (!canGetLocation()) {
-                showSettingsAlert();
+                showGPSAlert();
             }
             return false;
         });
@@ -126,29 +121,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void mapSetOnMapLongClickListener() {
         mMap.setOnMapLongClickListener(latLng -> {
-            mMap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Marker of Finder"));
-
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.save_location)
-                    .setMessage(R.string.save_this_location)
-                    .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
-                        Intent intent = new Intent();
-                        house.setLatitude(latLng.latitude);
-                        house.setLongitude(latLng.longitude);
-                        intent.putExtra("loc", house);
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    })
-                    .setNegativeButton(R.string.no, (dialogInterface, i) -> mMap.clear()).show();
-
-
+            if (!canGetLocation()) {
+                showGPSAlert();
+            } else {
+                mMap.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title("Marker of Finder"));
+                new AlertDialog.Builder(this)
+                        .setCancelable(false)
+                        .setTitle(R.string.save_location)
+                        .setMessage(R.string.save_this_location)
+                        .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+                            Intent intent = new Intent();
+                            house.setLatitude(latLng.latitude);
+                            house.setLongitude(latLng.longitude);
+                            intent.putExtra("loc", house);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        })
+                        .setNegativeButton(R.string.no, (dialogInterface, i) -> mMap.clear())
+                        .show();
+            }
         });
     }
 
-    public void showSettingsAlert() {
+    public void showGPSAlert() {
         new AlertDialog.Builder(this)
-                .setTitle("Error!")
-                .setMessage("Please ")
+                .setTitle(R.string.gps_off)
+                .setMessage(R.string.turn_on_gps)
                 .setCancelable(false)
                 .setPositiveButton(
                         R.string.yes,
@@ -165,7 +163,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 })
                 .setNeutralButton(R.string.retry, (dialogInterface, i) -> {
                     if (!canGetLocation()) {
-                        showSettingsAlert();
+                        showGPSAlert();
                     }
                 })
                 .show();
@@ -175,12 +173,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public boolean canGetLocation() {
         boolean result = true;
-        LocationManager lm = null;
         boolean gps_enabled = false;
         boolean network_enabled = false;
-        if (lm == null) {
-            lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        }
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // exceptions will be thrown if provider is not permitted.
         try {
             assert lm != null;
@@ -201,27 +196,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return result;
     }
 
-    private boolean isLocationEnabled(Context context) {
-        int locationMode = 0;
-        try {
-            locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
-        } catch (Settings.SettingNotFoundException e) {
-            e.printStackTrace();
-        }
-        return locationMode != Settings.Secure.LOCATION_MODE_OFF;
-    }
 
-    private void requestPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION_REQUEST_CODE);
+    private boolean requestPermissions() {
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                new AlertDialog.Builder(this)
+                        .setCancelable(false)
+                        .setTitle(R.string.need_to_access_location)
+                        .setMessage(R.string.accept_request_permission)
+                        .setPositiveButton(R.string.ok, (dialogInterface, i) ->
+                                ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, ACCESS_LOCATION_REQUEST_CODE))
+                        .setNegativeButton(R.string.cancel, (dialogInterface, i) -> dialogInterface.dismiss())
+                        .show();
+
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, ACCESS_LOCATION_REQUEST_CODE);
+            }
+            return false;
         } else {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, ACCESS_COARSE_LOCATION_REQUEST_CODE);
-        } else {
-
+            return true;
         }
     }
 
@@ -229,41 +224,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == ACCESS_FINE_LOCATION_REQUEST_CODE) {
-            if (permissions.length == 1 &&
+        if (requestCode == ACCESS_LOCATION_REQUEST_CODE) {
+            if (grantResults.length == 2 &&
+                    permissions.length == 2 &&
                     permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED
+            ) {
                 mMap.setMyLocationEnabled(true);
                 mMap.getUiSettings().setMyLocationButtonEnabled(true);
             } else {
                 Intent intent = new Intent();
                 setResult(PERMISSION_CANCELED, intent);
                 finish();
-                //finish();
                 // Permission was denied. Display an error message.
             }
-            if (requestCode == ACCESS_COARSE_LOCATION_REQUEST_CODE) {
-                if (permissions.length == 1 &&
-                        permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION) &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mMap.setMyLocationEnabled(true);
-                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
-                } else {
-                    Intent intent = new Intent();
-                    setResult(PERMISSION_CANCELED, intent);
-                    finish();
-                    //finish();
-                    // Permission was denied. Display an error message.
-                }
 
-            }
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 }
 

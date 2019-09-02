@@ -3,7 +3,6 @@ package com.example.realstate.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.android.gms.maps.model.LatLng;
 
 public class House implements Parcelable {
     private int id;
@@ -11,7 +10,6 @@ public class House implements Parcelable {
     private String avatar;
     private double latitude;
     private double longitude;
-    private LatLng coordination;
 
     public House() {
     }
@@ -24,7 +22,6 @@ public class House implements Parcelable {
         this.avatar = avatar;
         this.latitude = latitude;
         this.longitude = longitude;
-        coordination = new LatLng(latitude, longitude);
     }
 
     public String getTitle() {
@@ -59,14 +56,6 @@ public class House implements Parcelable {
         this.id = id;
     }
 
-    public LatLng getCoordination() {
-        return coordination;
-    }
-
-    public void setCoordination(LatLng coordination) {
-        this.coordination = coordination;
-    }
-
     public double getLatitude() {
         return latitude;
     }
@@ -95,11 +84,8 @@ public class House implements Parcelable {
         dest.writeString(title);
         dest.writeString(description);
         dest.writeString(avatar);
-        dest.writeParcelable(coordination, i);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
-
-
     }
 
     public static final Parcelable.Creator<House> CREATOR = new Parcelable.Creator<House>() {
@@ -109,7 +95,6 @@ public class House implements Parcelable {
 
         public House[] newArray(int size) {
             return new House[size];
-
         }
     };
 
@@ -118,7 +103,6 @@ public class House implements Parcelable {
         title = in.readString();
         description = in.readString();
         avatar = in.readString();
-        coordination = in.readParcelable(getClass().getClassLoader());
         latitude = in.readDouble();
         longitude = in.readDouble();
     }

@@ -1,5 +1,8 @@
 package com.example.realstate;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
@@ -8,7 +11,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.example.realstate.models.House;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -16,9 +18,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.File;
+
 public class ShowPropertyActivity extends AppCompatActivity implements OnMapReadyCallback {
     AppCompatImageView imageViewShowProperty;
-    AppCompatTextView textViewTitle , textViewDescription;
+    AppCompatTextView textViewTitle, textViewDescription;
     House house;
     private MapView mMapView;
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
@@ -35,16 +39,27 @@ public class ShowPropertyActivity extends AppCompatActivity implements OnMapRead
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
-        mMapView = (MapView) findViewById(R.id.map);
+        mMapView = findViewById(R.id.map);
         mMapView.onCreate(mapViewBundle);
 
         mMapView.getMapAsync(this);
     }
 
     private void bindDataToWidgets() {
-        //imageViewShowProperty.setImageResource(Integer.parseInt(house.getAvatarPath()));
+        setImageToImageView();
         textViewTitle.setText(house.getTitle());
         textViewDescription.setText(house.getDescription());
+    }
+
+    private void setImageToImageView() {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        File f = new File(house.getAvatar());
+        if (f.exists()) {
+            imageViewShowProperty.setImageURI(Uri.fromFile(f));
+        } else {
+            imageViewShowProperty.setImageResource(R.drawable.unknow_resourse);
+        }
     }
 
     private void init() {
@@ -71,7 +86,7 @@ public class ShowPropertyActivity extends AppCompatActivity implements OnMapRead
     public void onMapReady(GoogleMap map) {
         LatLng latLng = new LatLng(house.getLatitude(), house.getLongitude());
         map.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,16f));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f));
     }
 
     @Override
@@ -109,7 +124,6 @@ public class ShowPropertyActivity extends AppCompatActivity implements OnMapRead
         super.onLowMemory();
         mMapView.onLowMemory();
     }
-
 
 
     @Override

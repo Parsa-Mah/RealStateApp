@@ -16,4 +16,12 @@
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="save">Save</string>
+    <string name="pls_add_image">Please Add image</string>
+    <string name="location_saved">Location Saved !!!</string>
+    <string name="ok">OK</string>
+    <string name="gps_off">GPS is OFF!!</string>
+    <string name="turn_on_gps">Please, turn on your Location and set mode to \"High Accuracy\"</string>
+    <string name="accept_request_permission">Please, aceept request permission</string>
+    <string name="need_to_access_location">Need To Access Location</string>
+    <string name="cancel">CANCEL</string>
 </resources>

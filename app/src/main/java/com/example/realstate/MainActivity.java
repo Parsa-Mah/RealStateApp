@@ -1,19 +1,20 @@
 package com.example.realstate;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.realstate.adapters.HouseAdapter;
 import com.example.realstate.models.House;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +23,12 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButton;
     private HouseAdapter adapter;
     private List<House> houseList;
-    private SQLiteDatabase db;
-    private Cursor cursor;
+    RealStateAppSQLiteOpenHelper realStateAppSQLiteOpenHelper;
+    private static final int ADD_PROPERTY_REQ_CODE;
+
+    static {
+        ADD_PROPERTY_REQ_CODE = 391;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +40,23 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButtonSetOnClickListener();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == ADD_PROPERTY_REQ_CODE) {
+                houseList = realStateAppSQLiteOpenHelper.readFromDB(-1);
+                adapter.setHouseList(houseList);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     private void floatingActionButtonSetOnClickListener() {
         floatingActionButton.setOnClickListener(view -> {
             floatingActionButton.setEnabled(false);
             floatingActionButton.setClickable(false);
-            startActivity(new Intent(MainActivity.this, AddPropertyActivity.class));
+            startActivityForResult(new Intent(MainActivity.this, AddPropertyActivity.class), ADD_PROPERTY_REQ_CODE);
             final Handler handler = new Handler(); //delay for user cant abuse  click
             handler.postDelayed(() -> {
                 floatingActionButton.setEnabled(true);
@@ -50,20 +67,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void showData() {
         adapter = new HouseAdapter(houseList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void getHouseListFromDB() {
         houseList = new ArrayList<>();
         RealStateAppSQLiteOpenHelper realStateAppSQLiteOpenHelper = new RealStateAppSQLiteOpenHelper(this);
-        db = realStateAppSQLiteOpenHelper.getReadableDatabase();
-        houseList = realStateAppSQLiteOpenHelper.readFromDB(db,-1);
+        houseList = realStateAppSQLiteOpenHelper.readFromDB(-1);
     }
 
     private void init() {
-        RealStateAppSQLiteOpenHelper realStateAppSQLiteOpenHelper = new RealStateAppSQLiteOpenHelper(this);
+        realStateAppSQLiteOpenHelper = new RealStateAppSQLiteOpenHelper(this);
         recyclerView = findViewById(R.id.rc_location);
         floatingActionButton = findViewById(R.id.floatingActionButton);
     }
@@ -71,8 +87,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        db.close();
-        cursor.close();
+        realStateAppSQLiteOpenHelper.close();
     }
 }
 

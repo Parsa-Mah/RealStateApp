@@ -12,16 +12,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.util.Log;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+
 import com.example.realstate.models.House;
 
 import java.io.File;
@@ -31,19 +34,17 @@ import java.util.Objects;
 
 public class AddPropertyActivity extends AppCompatActivity {
 
-    TextView editTextTitle ,editTextDescription;
-    ImageView imgvAddLocation,addImage, imgv_add_property;
+    AppCompatEditText editTextTitle, editTextDescription;
+    AppCompatImageView imgvAddLocation, addImage;
     AppCompatButton buttonAddProperty;
     House house = new House();
     private String cameraFilePath;
-    private static final int SELECTED_IMAGE;
-    private static final int LOCATION_SAVED;
+    private static final int LOCATION_SAVED_REQUEST_CODE;
     private static final int GALLERY_REQUEST_CODE;
     private static final int CAMERA_REQUEST_CODE;
 
     static {
-        SELECTED_IMAGE = 1;
-        LOCATION_SAVED = 2;
+        LOCATION_SAVED_REQUEST_CODE = 2;
         GALLERY_REQUEST_CODE = 3;
         CAMERA_REQUEST_CODE = 4;
     }
@@ -54,28 +55,35 @@ public class AddPropertyActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == GALLERY_REQUEST_CODE) {
+                assert data != null;
                 Uri selectedImage = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                assert selectedImage != null;
                 Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                assert cursor != null;
                 cursor.moveToFirst();
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 String imgDecodableString = cursor.getString(columnIndex);
+                house.setAvatar(imgDecodableString);
+                Log.i("flp", imgDecodableString);
                 cursor.close();
                 addImage.setImageResource(0);
                 addImage.setImageBitmap(BitmapFactory.decodeFile(imgDecodableString));
             } else if (requestCode == CAMERA_REQUEST_CODE) {
                 Bitmap bitmap = BitmapFactory.decodeFile(cameraFilePath.toString());
-                imgv_add_property.setImageBitmap(bitmap);
-            } else if (requestCode == LOCATION_SAVED) {
+                house.setAvatar(cameraFilePath);
+                addImage.setImageBitmap(bitmap);
+            } else if (requestCode == LOCATION_SAVED_REQUEST_CODE) {
                 assert data != null;
                 house = data.getParcelableExtra("loc");
+                Toast.makeText(this, R.string.location_saved, Toast.LENGTH_SHORT).show();
             }
         } else if (resultCode == MapsActivity.PERMISSION_CANCELED) {
-            if (requestCode == LOCATION_SAVED) {
+            if (requestCode == LOCATION_SAVED_REQUEST_CODE) {
                 Toast.makeText(this, R.string.access_permission_canceled, Toast.LENGTH_LONG).show();
             }
-        }  else if (resultCode == MapsActivity.LOCATION_OFF) {
-            if (requestCode == LOCATION_SAVED) {
+        } else if (resultCode == MapsActivity.LOCATION_OFF) {
+            if (requestCode == LOCATION_SAVED_REQUEST_CODE) {
                 Toast.makeText(this, R.string.location_saved_canceled, Toast.LENGTH_LONG).show();
             }
         }
@@ -92,43 +100,51 @@ public class AddPropertyActivity extends AppCompatActivity {
                     dispatchTakePictureIntent();
                     //captureFromCamera();
                 }).setNegativeButton("GALERY", (DialogInterface, i) -> {
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            String[] mimeTypes = {"image/jpeg", "image/png"};
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-            startActivityForResult(intent, GALLERY_REQUEST_CODE);
-        }).show());
+                    Intent intent = new Intent(Intent.ACTION_PICK);
+                    intent.setType("image/*");
+                    String[] mimeTypes = {"image/jpeg", "image/png"};
+                    intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+                    startActivityForResult(intent, GALLERY_REQUEST_CODE);
+                }).show());
 
 
         imgvAddLocation.setOnClickListener(view -> {
             Intent intent = new Intent(AddPropertyActivity.this, MapsActivity.class);
             intent.putExtra("loc", house);
-            startActivityForResult(intent, LOCATION_SAVED);
+            startActivityForResult(intent, LOCATION_SAVED_REQUEST_CODE);
         });
         buttonAddProperty.setOnClickListener(view -> {
             String title = Objects.requireNonNull(editTextTitle.getText()).toString().trim();
-            String description = editTextTitle.getText().toString().trim();
+            String description = Objects.requireNonNull(editTextDescription.getText()).toString().trim();
             if (isValid(title, description)) {
-                if (house.getLongitude() != 0.0 && house.getLongitude() != 0.0){
-
-                }else {
-                    Toast.makeText(this , R.string.select_location , Toast.LENGTH_LONG).show();
+                if (house.getLongitude() != 0.0 && house.getLongitude() != 0.0) {
+                    if (house.getAvatar() != null) {
+                        house.setTitle(title);
+                        house.setDescription(description);
+                        RealStateAppSQLiteOpenHelper db = new RealStateAppSQLiteOpenHelper(AddPropertyActivity.this);
+                        db.insertIntoDB(house);
+                        db.close();
+                        Intent intent = new Intent();
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    } else {
+                        Toast.makeText(this, R.string.pls_add_image, Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(this, R.string.select_location, Toast.LENGTH_LONG).show();
                 }
-
             }
-
         });
     }
 
     private boolean isValid(String title, String description) {
-        if (title.isEmpty()){
-            Toast.makeText(this , R.string.title_empty , Toast.LENGTH_LONG).show();
+        if (title.isEmpty()) {
+            Toast.makeText(this, R.string.title_empty, Toast.LENGTH_LONG).show();
             editTextTitle.requestFocus();
             return false;
-
-        } else if(description.isEmpty()){
-            Toast.makeText(this , R.string.description_empty , Toast.LENGTH_LONG).show();
-            editTextTitle.requestFocus();
+        } else if (description.isEmpty()) {
+            Toast.makeText(this, R.string.description_empty, Toast.LENGTH_LONG).show();
+            editTextDescription.requestFocus();
             return false;
         }
         return true;
@@ -136,7 +152,6 @@ public class AddPropertyActivity extends AppCompatActivity {
 
     private void init() {
         imgvAddLocation = findViewById(R.id.imgv_add_location);
-        imgv_add_property = findViewById(R.id.imgv_add_property);
         editTextTitle = findViewById(R.id.editTextTitle);
         editTextDescription = findViewById(R.id.et_description);
         addImage = findViewById(R.id.imgv_add_property);
@@ -175,18 +190,18 @@ public class AddPropertyActivity extends AppCompatActivity {
         return image;
     }
 
-    private void dispatchTakePictureIntent(){
+    private void dispatchTakePictureIntent() {
         Intent takePicturesIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(takePicturesIntent.resolveActivity(getPackageManager()) != null){
+        if (takePicturesIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
-            try{
+            try {
                 photoFile = createImageFile();
                 cameraFilePath = photoFile.getPath();
-            }catch (IOException e){
+            } catch (IOException e) {
                 Toast.makeText(this, "Error while creating the image file", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
-            if (photoFile != null){
+            if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this, "com.example.realstate.fileprovider", photoFile);
                 takePicturesIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePicturesIntent, CAMERA_REQUEST_CODE);

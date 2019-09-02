@@ -7,21 +7,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Handler;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.realstate.R;
 import com.example.realstate.ShowPropertyActivity;
 import com.example.realstate.models.House;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
     private Context context;
     private RecyclerView recyclerView;
     private AppCompatTextView emptyTextView;
-    private static final int VIEW_TYPE_EMPTY, VIEW_TYPE_OCCUPIED , DELAY;
+    private static final int VIEW_TYPE_EMPTY, VIEW_TYPE_OCCUPIED, DELAY;
 
     static {
         VIEW_TYPE_EMPTY = 1;
@@ -50,6 +50,7 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
     @NonNull
     @Override
     public HouseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.i("flp", "onCreateViewHolder called");
         View itemview = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.location_row, parent, false);
         context = parent.getContext();
@@ -61,6 +62,7 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
 
     @Override
     public void onBindViewHolder(@NonNull HouseViewHolder holder, int position) {
+        Log.i("flp", "onBindViewHolder called");
         int viewType = getItemViewType(position);//get View type if 1 --> showEmptyView() if 2 -->  showRecyclerView()
         if (viewType == VIEW_TYPE_EMPTY) {
             showEmptyView();
@@ -79,7 +81,7 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
             holder.itemView.setEnabled(false);
             holder.itemView.setClickable(false);
             holder.itemView.setBackgroundColor(context.getColor(R.color.colorAccent));
-            Intent intent = new Intent(context , ShowPropertyActivity.class);
+            Intent intent = new Intent(context, ShowPropertyActivity.class);
             intent.putExtra("loc", houseList.get(position));// send house object to next activity
             context.startActivity(intent);
             final Handler handler = new Handler(); //delay for user cant abuse  click
@@ -88,7 +90,7 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
         });
     }
 
-    private void resetItemViewProperty(@NonNull HouseViewHolder holder ) {
+    private void resetItemViewProperty(@NonNull HouseViewHolder holder) {
         holder.itemView.setEnabled(true);
         holder.itemView.setClickable(true);
         holder.itemView.setBackgroundColor(context.getColor(R.color.primary_text));
@@ -108,7 +110,11 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
 
     @Override
     public int getItemCount() {
-        return houseList.size();
+        return houseList.size() != 0 ? houseList.size() : 1;
+    }
+
+    public void setHouseList(List<House> houseList) {
+        this.houseList = houseList;
     }
 
     @Override
@@ -118,6 +124,7 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
         } else {
             return VIEW_TYPE_OCCUPIED;
         }
+
     }
 
     public class HouseViewHolder extends RecyclerView.ViewHolder {
@@ -134,12 +141,14 @@ public class HouseAdapter extends RecyclerView.Adapter<HouseAdapter.HouseViewHol
         public void bind(House house) {
             title.setText(house.getTitle());
             description.setText(house.getDescription());
-           // avatar.setImageResource(Integer.parseInt(house.getAvatarPath()));
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             File f = new File(house.getAvatar());
-            Log.i("Parsa2", house.getAvatar());
-            avatar.setImageURI(Uri.fromFile(f));
+            if (f.exists()) {
+                avatar.setImageURI(Uri.fromFile(f));
+            } else {
+                avatar.setImageResource(R.drawable.unknow_resourse);
+            }
 
         }
     }
